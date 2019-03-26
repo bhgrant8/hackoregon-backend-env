@@ -1,23 +1,21 @@
 sudo: required
-
-language: python
-python:
-  - "3.6"
-
 services:
   - docker
 
-install:
-  - pip install --upgrade awscli
+before_script:
+  - docker pull $DOCKER_USERNAME/$DOCKER_IMAGE || true
 
 script:
-  - bin/build.sh -p
-  - bin/test.sh -p
+  - ./bin/build.sh -d
 
-after_success:
-  - bin/deploy.sh
+after_script:
+  - docker images
 
-# example of how to send notifications for slack integration
-slack:
-  rooms:
-    - hackoregon2018:0hiZjZlexw6dfsIDpN4SsXls#backend-exemplar
+before_deploy:
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+
+deploy:
+  provider: script
+  script: docker push $DOCKER_USERNAME/$DOCKER_IMAGE
+  on:
+    branch: staging

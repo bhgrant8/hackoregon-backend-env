@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: DOCKERFILE.db.development
-    image: db_development
+    image: bhgrant/bhg_ho_database
     ports:
       - 5439:5432
     environment:
@@ -15,14 +15,12 @@ services:
     build:
       context: .
       dockerfile: DOCKERFILE.api.development
-    image: api_development
+    image: bhgrant/bhg_ho_django
     command: ./bin/development-docker-entrypoint.sh
     volumes:
       - .:/code
     ports:
       - "8000:8000"
-    depends_on:
-      - db_development
     environment:
       - PROJECT_NAME
       - DEBUG=True

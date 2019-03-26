@@ -1,4 +1,4 @@
-"""dead_songs URL Configuration
+"""project URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.0/topics/http/urls/
@@ -16,8 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url, include
 from django.urls import path
+import os
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    url(r'^', include('api.urls')),
-]
+
+if 'PYPI_MODULE' in os.environ:
+    urlpatterns = [
+        path('admin/', admin.site.urls),
+        url(r'^', include(os.environ.get('PYPI_MODULE')+'.urls')),
+    ]
+else:
+    urlpatterns = [
+        path('admin/', admin.site.urls)
+    ]
